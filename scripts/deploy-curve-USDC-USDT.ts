@@ -3,20 +3,20 @@ import { ethers } from "hardhat";
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
 import { verifyContract } from "../utils/verifyContract";
 
-const ensId = ethers.utils.formatBytes32String("zyt.eth");
 const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
+const USDC = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
 const strategyParams = {
     want: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
-    pool: "0x7f90122bf0700f9e7e1f688fe926940e8839f353 ",
+    pool: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     zap: "0x0000000000000000000000000000000000000000",
-    pid: 3,
-    params: ["2", "2", 0, 0],
+    pid: 1,
+    params: ["2", "0", 0, 0], //[poolSize, depositIndex, useUnderlying, useDepositNative]
     unirouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
     crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
     cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 1000, ETH]),
-    nativeToDepositPath: ["0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"],
+    nativeToDepositPath: ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 1000, USDC]),
     nativeToDepositRoute: [],
 };
 const vaultParams = {
@@ -55,7 +55,7 @@ async function deploy() {
             deployerAddress,
             feeConfigurator],
     ];
-
+    console.log("Params configured");
     const strategyConvexL2 = await StrategyConvexL2.deploy(...strategyConstructorArguments);
 
     await strategyConvexL2.deployed();

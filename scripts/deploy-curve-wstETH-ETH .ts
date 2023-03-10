@@ -7,16 +7,15 @@ const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
 const strategyParams = {
-    want: "0xDbcD16e622c95AcB2650b38eC799f76BFC557a0b",
+    want: "0xdbcd16e622c95acb2650b38ec799f76bfc557a0b",
     gaugeFactory: "0xabc000d88f23bb45525e447528dbf656a9d55bf5",
     gauge: "0x098ef55011b6b8c99845128114a9d9159777d697",
     pool: "0x6eb2dc694eb516b16dc9fbc678c60052bbdd7d80",
-    params: ["0", "0", 0, 0],
+    params: ["2", "0", 0, 0], //[poolSize, depositIndex, useUnderlying, useMetapool]
     unirouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
     paths: [ethers.utils.solidityPack(["address", "uint24", "address",], [CURVE, 1000, ETH]),
     ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 1000, ETH])
-    ]
-
+    ],
 };
 const vaultParams = {
     vaultName: "Test CurvewstETH-ETH",
@@ -42,8 +41,8 @@ async function deploy() {
         strategyParams.gaugeFactory,
         strategyParams.gauge,
         strategyParams.pool,
-        strategyParams.paths,
         strategyParams.params,
+        strategyParams.paths,
         [vault.address,
         strategyParams.unirouter,
             deployerAddress,
@@ -51,6 +50,8 @@ async function deploy() {
             deployerAddress,
             feeConfigurator],
     ];
+
+    console.log("Params configured");
 
     const strategyCurveLPUniV3Router = await StrategyCurveLPUniV3Router.deploy(...strategyConstructorArguments);
 
