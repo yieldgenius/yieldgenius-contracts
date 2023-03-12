@@ -3,6 +3,8 @@ import { ethers } from "hardhat";
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
 import { verifyContract } from "../utils/verifyContract";
 
+const hardhat = require("hardhat");
+
 const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
@@ -74,9 +76,18 @@ async function deploy() {
         : console.log(`Vault Intilization failed with tx: ${vaultInitTx.transactionHash}`);
 
 
-
-    verifyContract(strategyCurveLPUniV3Router.address, strategyConstructorArguments)
-    verifyContract(vault.address, [])
+    //Vault verify
+    await hardhat.run("verify:verify", {
+        address: vault.address,
+        constructorArguments: [],
+    })
+    //Strategy verify
+    await hardhat.run("verify:verify", {
+        address: strategyCurveLPUniV3Router.address,
+        constructorArguments: [...strategyConstructorArguments],
+    })
+    //verifyContract(strategyCurveLPUniV3Router.address, strategyConstructorArguments)
+    //verifyContract(vault.address, [])
 
 }
 deploy()
