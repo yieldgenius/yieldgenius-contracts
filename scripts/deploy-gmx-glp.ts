@@ -2,8 +2,8 @@ import { ethers } from "hardhat";
 
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
 import { verifyContract } from "../utils/verifyContract";
+const hardhat = require("hardhat");
 
-const ensId = ethers.utils.formatBytes32String("zyt.eth");
 const strategyParams = {
     want: "0x5402B5F40310bDED796c7D0F3FF6683f5C0cFfdf",
     native: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
@@ -70,8 +70,16 @@ async function deploy() {
 
 
 
-    verifyContract(strategyGlp.address, strategyConstructorArguments)
-    verifyContract(vault.address, [])
+    //Vault verify
+    await hardhat.run("verify:verify", {
+        address: vault.address,
+        constructorArguments: [],
+    })
+    //Strategy verify
+    await hardhat.run("verify:verify", {
+        address: strategyGlp.address,
+        constructorArguments: [...strategyConstructorArguments],
+    })
 
 }
 deploy()

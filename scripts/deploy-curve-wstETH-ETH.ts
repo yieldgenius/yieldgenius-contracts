@@ -86,8 +86,6 @@ async function deploy() {
         address: strategyCurveLPUniV3Router.address,
         constructorArguments: [...strategyConstructorArguments],
     })
-    //verifyContract(strategyCurveLPUniV3Router.address, strategyConstructorArguments)
-    //verifyContract(vault.address, [])
 
 }
 deploy()

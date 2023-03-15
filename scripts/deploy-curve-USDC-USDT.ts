@@ -86,9 +86,7 @@ async function deploy() {
         address: strategyConvexL2.address,
         constructorArguments: [...strategyConstructorArguments],
     })
-    // verifyContract(strategyConvexL2.address, strategyConstructorArguments)
-    //verifyContract(vault.address, [])
-
+    
 }
 deploy()
     .then(() => process.exit(0))

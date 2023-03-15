@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
-
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
+const hardhat = require("hardhat");
 
 const strategyParams = {
     want: "0x3eC0eddCd1e25025077327886A78133589082fB2",
@@ -66,8 +66,19 @@ async function deploy() {
         ? console.log(`Vault Intilization done with tx: ${vaultInitTx.transactionHash}`)
         : console.log(`Vault Intilization failed with tx: ${vaultInitTx.transactionHash}`);
 
+    //Vault verify
+    await hardhat.run("verify:verify", {
+        address: vault.address,
+        constructorArguments: [],
+    })
+    //Strategy verify
+    await hardhat.run("verify:verify", {
+        address: strategyCommonChefLP.address,
+        constructorArguments: [...strategyConstructorArguments],
+    })
 
 }
+
 deploy()
     .then(() => process.exit(0))
     .catch((error) => {
