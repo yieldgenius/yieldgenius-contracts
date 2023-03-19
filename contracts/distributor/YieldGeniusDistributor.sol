@@ -74,6 +74,11 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
     uint16 public constant MAXIMUM_DEPOSIT_FEE_RATE = 1000;
 
     /**
+     * @notice Maximum emission rate
+     */
+    uint256 public constant MAXIMUM_EMISSION_RATE = 10 ether;
+
+    /**
      *@notice Info of each pool
      */
     PoolInfo[] public poolInfo;
@@ -104,7 +109,7 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
     uint256 public totalYieldgeniusInPools;
 
     /**
-     *@notice Yieldgeniusshare address.
+     *@notice marketing address.
      */
     address public marketingAddress;
 
@@ -190,7 +195,7 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
         uint256 newAmount
     );
 
-    event SetMarketingPercent(
+    event SetMarketingAddress(
         address indexed oldAddress,
         address indexed newAddress
     );
@@ -218,7 +223,7 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
     ) {
         require(
             _marketingPercent <= 100,
-            "constructor: invalid yieldgeniusshare percent value"
+            "constructor: invalid marketing percent value"
         );
 
         startTimestamp = block.timestamp + (60 * 60 * 24 * 365);
@@ -636,7 +641,7 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
     }
 
     /**
-     *@notice Internal method for _updatePool
+     *@notice Internal method for depositing with permit
      *@param pid pool id number
      *@param amount deposit amount
      *@param deadline deposit deadline
@@ -892,6 +897,7 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
      *@param _yieldgeniusPerSec new emission rate per sec
      */
     function updateEmissionRate(uint256 _yieldgeniusPerSec) public onlyOwner {
+        require(_yieldgeniusPerSec <= MAXIMUM_EMISSION_RATE, "too high");
         _massUpdatePools();
 
         emit EmissionRateUpdated(
@@ -954,10 +960,10 @@ contract YieldGeniusDistributor is Ownable, ReentrancyGuard {
     function setMarketingAddress(address _marketingAddress) public onlyOwner {
         require(
             _marketingAddress != address(0),
-            "invalid new yieldgeniusshare address"
+            "invalid new marketing address"
         );
         marketingAddress = _marketingAddress;
-        emit SetMarketingPercent(msg.sender, _marketingAddress);
+        emit SetMarketingAddress(msg.sender, _marketingAddress);
     }
 
     /**
