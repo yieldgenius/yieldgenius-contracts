@@ -1,4 +1,5 @@
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
+import feeConfiguratorParth from "../artifacts/contracts/utils/FeeConfigurator.sol/FeeConfigurator.json";
 import { ethers } from "hardhat";
 
 const hardhat = require("hardhat");
@@ -135,7 +136,33 @@ const vaultParamsSushiMAGICETH = {
 async function deploy() {
     const [account] = await ethers.getSigners();
     const deployerAddress = account.address;
-    const feeConfigurator = "0xE0a0e6B07bC0f28F832A69CaCB75E614318cEba5";// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
+
+    //Deploy FeeConfigurator
+
+    const FeeConfigurator = await ethers.getContractFactory("FeeConfigurator");
+    const feeConfigurator = await FeeConfigurator.deploy();
+    await feeConfigurator.deployed();
+    console.log("FeeConfigurator is deploy to address:", feeConfigurator.address);
+
+    const feeConfiguratorContract = await ethers.getContractAt(feeConfiguratorParth.abi, feeConfigurator.address);
+    let feeConfiguratorInit = await feeConfiguratorContract.initialize(deployerAddress, "95000000000000000");
+    feeConfiguratorInit = await feeConfiguratorInit.wait()
+    feeConfiguratorInit.status === 1
+        ? console.log(`Fee Configurator initialized with tx: ${feeConfiguratorInit.transactionHash}`)
+        : console.log(`Fee Configurator intilization failed with tx: ${feeConfiguratorInit.transactionHash}`);
+
+    let feeConfiguratorSetFeeCat = await feeConfiguratorContract.setFeeCategory("0", "95000000000000000", "5000000000000000", "5000000000000000", "default", 1, 1);
+    feeConfiguratorSetFeeCat = await feeConfiguratorSetFeeCat.wait()
+    feeConfiguratorSetFeeCat.status === 1
+        ? console.log(`Fee category is set with tx: ${feeConfiguratorSetFeeCat.transactionHash}`)
+        : console.log(`Fee category setting failed with tx ${feeConfiguratorSetFeeCat.transactionHash}`);
+
+
+    //Verify FeeConfigurator 
+    await hardhat.run("verify:verify", {
+        address: feeConfigurator.address,
+        constructorArguments: [],
+    })
 
     //Deploy Curve TriCrypto vault
     const VaultCurveTriCrypto = await ethers.getContractFactory("YieldGeniusVault");
@@ -160,7 +187,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
     ];
 
     const strategyConvexL2CurveTriCrpyto = await StrategyConvexL2CurveTriCrpyto.deploy(...strategyConstructorArgumentsCurveTriCrypto);
@@ -215,7 +242,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
     ];
 
     const strategyConvexL2CurveUSDCUSDT = await StrategyConvexL2CurveUSDCUSDT.deploy(...strategyConstructorArgumentsCurveUSDCUSDT);
@@ -231,8 +258,8 @@ async function deploy() {
         vaultParamsCurveUSDCUSDT.delay,
     ];
 
-    const vaultContract = await ethers.getContractAt(vaultV7.abi, vaultCurveUSDCUSDT.address);
-    let vaultInitTxCurveUSDCUSDT = await vaultContract.initialize(...vaultConstructorArguments);
+    const vaultContractCurveUSDCUSDT = await ethers.getContractAt(vaultV7.abi, vaultCurveUSDCUSDT.address);
+    let vaultInitTxCurveUSDCUSDT = await vaultContractCurveUSDCUSDT.initialize(...vaultConstructorArguments);
     vaultInitTxCurveUSDCUSDT = await vaultInitTxCurveUSDCUSDT.wait()
     vaultInitTxCurveUSDCUSDT.status === 1
         ? console.log(`Vault Curve USDC-USDT Intilization done with tx: ${vaultInitTxCurveUSDCUSDT.transactionHash}`)
@@ -268,7 +295,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
     ];
 
     const strategyCurveLPUniV3RouterCurvewstETHETH = await StrategyCurveLPUniV3RouterCurvewstETHETH.deploy(...strategyConstructorArgumentsCurvewstETHETH);
@@ -321,7 +348,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
     ];
 
     const strategyGlpGMXGLP = await StrategyGLPGMXGLP.deploy(...strategyConstructorArgumentsGMXGLP);
@@ -374,7 +401,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
         strategyParamsChefLpWETHUSDC.outputToNativeRoute,
         strategyParamsChefLpWETHUSDC.outputToLp0Route,
         strategyParamsChefLpWETHUSDC.outputToLp1Route
@@ -428,7 +455,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
         strategyParamsChefLpZYBUSDC.outputToNativeRoute,
         strategyParamsChefLpZYBUSDC.outputToLp0Route,
         strategyParamsChefLpZYBUSDC.outputToLp1Route
@@ -482,7 +509,7 @@ async function deploy() {
             deployerAddress,
             deployerAddress,
             deployerAddress,
-            feeConfigurator],
+        feeConfigurator.address],
         strategyParamsChefLpZYBWETH.outputToNativeRoute,
         strategyParamsChefLpZYBWETH.outputToLp0Route,
         strategyParamsChefLpZYBWETH.outputToLp1Route
@@ -502,7 +529,7 @@ async function deploy() {
     ];
 
     const vaultContractChefLpZYBWETH = await ethers.getContractAt(vaultV7.abi, vaultChefLpZYBWETH.address);
-    let vaultInitTxChefLpZYBWETH = await vaultContract.initialize(...vaultConstructorArgumentsChefLpZYBWETH);
+    let vaultInitTxChefLpZYBWETH = await vaultContractChefLpZYBWETH.initialize(...vaultConstructorArgumentsChefLpZYBWETH);
     vaultInitTxChefLpZYBWETH = await vaultInitTxChefLpZYBWETH.wait()
     vaultInitTxChefLpZYBWETH.status === 1
         ? console.log(`Vault Chef LP ZYB-WETH Intilization done with tx: ${vaultInitTxChefLpZYBWETH.transactionHash}`)
