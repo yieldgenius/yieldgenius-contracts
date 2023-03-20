@@ -4,6 +4,7 @@ import { ethers } from "hardhat";
 
 const hardhat = require("hardhat");
 
+const feeRecipient = "0x129C5292fCC814Ca48EE753823aB22131eAf5689"
 const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
@@ -93,43 +94,43 @@ const strategyParamsSushiMAGICETH = {
 };
 
 const vaultParamsCurveTriCrypto = {
-    vaultName: "Test CurveTriCrypto",
-    vaultSymbol: "Test-CurveTriCrypto",
+    vaultName: "YG CurveTriCrypto",
+    vaultSymbol: "ygCurveTriCrypto",
     delay: 21600,
 };
 const vaultParamsCurveUSDCUSDT = {
-    vaultName: "Test CurveUSDC-USDT",
-    vaultSymbol: "Test-CurveUSDC-USDT",
+    vaultName: "YG CurveUSDC-USDT",
+    vaultSymbol: "ygCurveUSDC-USDT",
     delay: 21600,
 };
 const vaultParamsCurvewstETHETH = {
-    vaultName: "Test CurvewstETH-ETH",
-    vaultSymbol: "Test-CurvewstETH-ETH",
+    vaultName: "YG CurvewstETH-ETH",
+    vaultSymbol: "ygCurvewstETH-ETH",
     delay: 21600,
 };
 const vaultParamsGMXGLP = {
-    vaultName: "TestGMX-GLP",
-    vaultSymbol: "testGMX-GLP",
+    vaultName: "YG GMX-GLP",
+    vaultSymbol: "ygGMX-GLP",
     delay: 21600,
 };
 const vaultParamsChefLpWETHUSDC = {
-    vaultName: "TestWETH-USDC",
-    vaultSymbol: "testWETH-USDC",
+    vaultName: "YG WETH-USDC",
+    vaultSymbol: "ygWETH-USDC",
     delay: 21600,
 };
 const vaultParamsChefLpZYBUSDC = {
-    vaultName: "TestZYB-USDC",
-    vaultSymbol: "testZYB-USDC",
+    vaultName: "YG ZYB-USDC",
+    vaultSymbol: "ygZYB-USDC",
     delay: 21600,
 };
 const vaultParamsChefLpZYBWETH = {
-    vaultName: "TestZYB-WETH",
-    vaultSymbol: "testZYB-WETH",
+    vaultName: "YG ZYB-WETH",
+    vaultSymbol: "ygZYB-WETH",
     delay: 21600,
 };
 const vaultParamsSushiMAGICETH = {
-    vaultName: "TestMAGIC-ETH",
-    vaultSymbol: "testMAGIC-ETH",
+    vaultName: "YG MAGIC-ETH",
+    vaultSymbol: "ygMAGIC-ETH",
     delay: 21600,
 };
 
@@ -145,13 +146,13 @@ async function deploy() {
     console.log("FeeConfigurator is deploy to address:", feeConfigurator.address);
 
     const feeConfiguratorContract = await ethers.getContractAt(feeConfiguratorParth.abi, feeConfigurator.address);
-    let feeConfiguratorInit = await feeConfiguratorContract.initialize(deployerAddress, "95000000000000000");
+    let feeConfiguratorInit = await feeConfiguratorContract.initialize(deployerAddress, "50000000000000000");
     feeConfiguratorInit = await feeConfiguratorInit.wait()
     feeConfiguratorInit.status === 1
         ? console.log(`Fee Configurator initialized with tx: ${feeConfiguratorInit.transactionHash}`)
         : console.log(`Fee Configurator intilization failed with tx: ${feeConfiguratorInit.transactionHash}`);
 
-    let feeConfiguratorSetFeeCat = await feeConfiguratorContract.setFeeCategory("0", "95000000000000000", "5000000000000000", "5000000000000000", "default", 1, 1);
+    let feeConfiguratorSetFeeCat = await feeConfiguratorContract.setFeeCategory("0", "50000000000000000", "0", "0", "default", 1, 1);
     feeConfiguratorSetFeeCat = await feeConfiguratorSetFeeCat.wait()
     feeConfiguratorSetFeeCat.status === 1
         ? console.log(`Fee category is set with tx: ${feeConfiguratorSetFeeCat.transactionHash}`)
@@ -186,7 +187,7 @@ async function deploy() {
         strategyParamsCurveTriCrypto.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
     ];
 
@@ -241,7 +242,7 @@ async function deploy() {
         strategyParamsCurveUSDCUSDT.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
     ];
 
@@ -294,7 +295,7 @@ async function deploy() {
         strategyParamsCurvewstETHETH.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
     ];
 
@@ -347,7 +348,7 @@ async function deploy() {
         strategyParamsGMXGLP.uniRouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
     ];
 
@@ -400,7 +401,7 @@ async function deploy() {
         strategyParamsChefLpWETHUSDC.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
         strategyParamsChefLpWETHUSDC.outputToNativeRoute,
         strategyParamsChefLpWETHUSDC.outputToLp0Route,
@@ -454,7 +455,7 @@ async function deploy() {
         strategyParamsChefLpZYBUSDC.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
         strategyParamsChefLpZYBUSDC.outputToNativeRoute,
         strategyParamsChefLpZYBUSDC.outputToLp0Route,
@@ -508,7 +509,7 @@ async function deploy() {
         strategyParamsChefLpZYBWETH.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
         feeConfigurator.address],
         strategyParamsChefLpZYBWETH.outputToNativeRoute,
         strategyParamsChefLpZYBWETH.outputToLp0Route,

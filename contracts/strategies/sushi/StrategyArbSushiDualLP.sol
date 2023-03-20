@@ -82,7 +82,7 @@ contract StrategyArbSushiDualLP is StratManager, FeeManager, GasThrottler {
         address[] memory _rewardToOutputRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, msg.sender) {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, 0x129C5292fCC814Ca48EE753823aB22131eAf5689 ) {
         want = _want;
         poolId = _poolId;
         chef = _chef;
