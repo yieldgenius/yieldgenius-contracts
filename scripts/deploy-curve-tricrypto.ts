@@ -12,7 +12,7 @@ const strategyParams = {
     want: "0x8e0b8c8bb9db49a46697f3a5bb8a308e744821d2",
     pool: "0x960ea3e3c7fb317332d990873d354e18d7645590",
     zap: "0x0000000000000000000000000000000000000000",
-    pid: 3,
+    pid: 8,
     params: ["3", "2", 0, 0],
     unirouter: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
     crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
@@ -21,8 +21,8 @@ const strategyParams = {
     nativeToDepositRoute: ["0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"],
 };
 const vaultParams = {
-    vaultName: "Test CurveTriCrypto",
-    vaultSymbol: "Test-CurveTriCrypto",
+    vaultName: "YG CurveTriCrypto",
+    vaultSymbol: "YG-CurveTriCrypto",
     delay: 21600,
 };
 
@@ -31,7 +31,7 @@ async function deploy() {
     // const FeeConfigurator = await ethers.getContractFactory("FeeConfigurator")
     const [account] = await ethers.getSigners();
     const deployerAddress = account.address;
-    const feeConfigurator = "0xE0a0e6B07bC0f28F832A69CaCB75E614318cEba5"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
+    const feeConfigurator = "0x85B1fcA863952068CeEcc40Fcb0A468e13d36c08"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
     const Vault = await ethers.getContractFactory("YieldGeniusVault")
     const vault = await Vault.deploy();
     const StrategyConvexL2 = await ethers.getContractFactory("StrategyConvexL2")
@@ -78,11 +78,11 @@ async function deploy() {
         : console.log(`Vault Intilization failed with tx: ${vaultInitTx.transactionHash}`);
 
 
-    //Vault verify
-    await hardhat.run("verify:verify", {
-        address: vault.address,
-        constructorArguments: [],
-    })
+    /*  //Vault verify
+      await hardhat.run("verify:verify", {
+          address: vault.address,
+          constructorArguments: [],
+      })*/
     //Strategy verify
     await hardhat.run("verify:verify", {
         address: strategyConvexL2.address,

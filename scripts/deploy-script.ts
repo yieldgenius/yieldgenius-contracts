@@ -159,11 +159,7 @@ async function deploy() {
         : console.log(`Fee category setting failed with tx ${feeConfiguratorSetFeeCat.transactionHash}`);
 
 
-    //Verify FeeConfigurator 
-    await hardhat.run("verify:verify", {
-        address: feeConfigurator.address,
-        constructorArguments: [],
-    })
+
 
     //Deploy Curve TriCrypto vault
     const VaultCurveTriCrypto = await ethers.getContractFactory("YieldGeniusVault");
@@ -211,16 +207,7 @@ async function deploy() {
         ? console.log(`Vault Curve TriCrpyto Intilization done with tx: ${vaultInitTxCurveTriCrypto.transactionHash}`)
         : console.log(`Vault Curve TriCrpyto Intilization failed with tx: ${vaultInitTxCurveTriCrypto.transactionHash}`);
 
-    //Vault Curve TriCrypto verify
-    await hardhat.run("verify:verify", {
-        address: vaultCurveTriCrypto.address,
-        constructorArguments: [],
-    })
-    //Strategy Curve TriCrypto Vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyConvexL2CurveTriCrpyto.address,
-        constructorArguments: [...strategyConstructorArgumentsCurveTriCrypto],
-    });
+
 
     //Deploy Curve USDC-USDT vault
     const VaultCurveUSDCUSDT = await ethers.getContractFactory("YieldGeniusVault");
@@ -266,16 +253,7 @@ async function deploy() {
         ? console.log(`Vault Curve USDC-USDT Intilization done with tx: ${vaultInitTxCurveUSDCUSDT.transactionHash}`)
         : console.log(`Vault Curve USDC-USDT Intilization failed with tx: ${vaultInitTxCurveUSDCUSDT.transactionHash}`);
 
-    //Vault Curve USDC-USDT verify
-    await hardhat.run("verify:verify", {
-        address: vaultCurveUSDCUSDT.address,
-        constructorArguments: [],
-    })
-    //Strategy Curve USDC-USDT vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyConvexL2CurveUSDCUSDT.address,
-        constructorArguments: [...strategyConstructorArgumentsCurveUSDCUSDT],
-    });
+
 
     //Deploy Curve wstETH-ETH vault
     const VaultCurvewstETHETH = await ethers.getContractFactory("YieldGeniusVault")
@@ -320,16 +298,7 @@ async function deploy() {
         : console.log(`Vault Curve wstETH-ETH Intilization failed with tx: ${vaultInitTxCurvewstETHETH.transactionHash}`);
 
 
-    //Vault Curve wstETH-ETH verify
-    await hardhat.run("verify:verify", {
-        address: vaultCurvewstETHETH.address,
-        constructorArguments: [],
-    })
-    //Strategy Curve wstETH-ETH vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyCurveLPUniV3RouterCurvewstETHETH.address,
-        constructorArguments: [...strategyConstructorArgumentsCurvewstETHETH],
-    })
+
 
     //Deploy GMX-GLP vault
     const VaultGMXGLP = await ethers.getContractFactory("YieldGeniusVault")
@@ -374,16 +343,7 @@ async function deploy() {
 
 
 
-    //Vault GMX-GLP  verify
-    await hardhat.run("verify:verify", {
-        address: vaultGMXGLP.address,
-        constructorArguments: [],
-    })
-    //Strategy GMX-GLP vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyGlpGMXGLP.address,
-        constructorArguments: [...strategyConstructorArgumentsGMXGLP],
-    })
+
 
     //Deploy Chef LP WETH-USDC vault
     const VaultChefLpWETHUSDC = await ethers.getContractFactory("YieldGeniusVault")
@@ -428,16 +388,7 @@ async function deploy() {
         ? console.log(`Vault Chef LP WETH-USDC Intilization done with tx: ${vaultInitTxChefLpWETHUSDC.transactionHash}`)
         : console.log(`Vault Chef LP WETH-USDC Intilization failed with tx: ${vaultInitTxChefLpWETHUSDC.transactionHash}`);
 
-    //Vault Chef LP WETH-USDC verify
-    await hardhat.run("verify:verify", {
-        address: vaultChefLpWETHUSDC.address,
-        constructorArguments: [],
-    })
-    //Strategy Chef LP WETH-USDC vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyCommonChefLPChefLpWETHUSDC.address,
-        constructorArguments: [...strategyConstructorArgumentsChefLpWETHUSDC],
-    })
+
 
     //Deploy Chef LP ZYB-USDC vault
     const VaultChefLpZYBUSDC = await ethers.getContractFactory("YieldGeniusVault");
@@ -482,16 +433,7 @@ async function deploy() {
         ? console.log(`Vault Chef LP ZYB-USDC Intilization done with tx: ${vaultInitTxChefLpZYBUSDC.transactionHash}`)
         : console.log(`Vault Chef LP ZYB-USDC Intilization failed with tx: ${vaultInitTxChefLpZYBUSDC.transactionHash}`);
 
-    //Vault Chef LP ZYB-USDC verify
-    await hardhat.run("verify:verify", {
-        address: vaultChefLpZYBUSDC.address,
-        constructorArguments: [],
-    })
-    //Strategy Chef LP ZYB-USDC vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyCommonChefLPChefLpZYBUSDC.address,
-        constructorArguments: [...strategyConstructorArgumentsChefLpZYBUSDC],
-    });
+
 
     //Deploy Chef LP ZYB-WETH vault
     const VaultChefLpZYBWETH = await ethers.getContractFactory("YieldGeniusVault");
@@ -536,16 +478,7 @@ async function deploy() {
         ? console.log(`Vault Chef LP ZYB-WETH Intilization done with tx: ${vaultInitTxChefLpZYBWETH.transactionHash}`)
         : console.log(`Vault Chef LP ZYB-WETH Intilization failed with tx: ${vaultInitTxChefLpZYBWETH.transactionHash}`);
 
-    //Vault Chef LP ZYB-WETH verify
-    await hardhat.run("verify:verify", {
-        address: vaultChefLpZYBWETH.address,
-        constructorArguments: [],
-    });
-    //Strategy Chef LP ZYB-WETH vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyCommonChefLPChefLpZYBWETH.address,
-        constructorArguments: [...strategyConstructorArgumentsChefLpZYBWETH],
-    });
+
 
     //Deploy Sushi MAGIC-ETH vault
     const VaultSushiMAGICETH = await ethers.getContractFactory("YieldGeniusVault");
@@ -589,16 +522,115 @@ async function deploy() {
         ? console.log(`Vault Sushi MAGIC-ETH Intilization done with tx: ${vaultInitTxSushiMAGICETH.transactionHash}`)
         : console.log(`Vault Sushi MAGIC-ETH Intilization failed with tx: ${vaultInitTxSushiMAGICETH.transactionHash}`);
 
-    //Vault Sushi MAGIC-ETH verify
-    await hardhat.run("verify:verify", {
-        address: vaultSushiMAGICETH.address,
-        constructorArguments: [],
-    })
-    //Strategy Sushi MAGIC-ETH vault verify
-    await hardhat.run("verify:verify", {
-        address: strategyMagicEthSushiSushiMAGICETH.address,
-        constructorArguments: [...strategyConstructorArgumentsSushiMAGICETH],
-    })
+
+
+
+    // Verifications:
+    try {
+        //Verify FeeConfigurator 
+        await hardhat.run("verify:verify", {
+            address: feeConfigurator.address,
+            constructorArguments: [],
+        })
+
+        /*
+        //Vault Curve TriCrypto verify
+        await hardhat.run("verify:verify", {
+            address: vaultCurveTriCrypto.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Curve TriCrypto Vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyConvexL2CurveTriCrpyto.address,
+            constructorArguments: [...strategyConstructorArgumentsCurveTriCrypto],
+        });
+
+        /*
+        //Vault Curve USDC-USDT verify
+        await hardhat.run("verify:verify", {
+            address: vaultCurveUSDCUSDT.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Curve USDC-USDT vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyConvexL2CurveUSDCUSDT.address,
+            constructorArguments: [...strategyConstructorArgumentsCurveUSDCUSDT],
+        });
+
+        /*
+        //Vault Curve wstETH-ETH verify
+        await hardhat.run("verify:verify", {
+            address: vaultCurvewstETHETH.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Curve wstETH-ETH vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyCurveLPUniV3RouterCurvewstETHETH.address,
+            constructorArguments: [...strategyConstructorArgumentsCurvewstETHETH],
+        })
+
+        /*
+        //Vault GMX-GLP  verify
+        await hardhat.run("verify:verify", {
+            address: vaultGMXGLP.address,
+            constructorArguments: [],
+        })*/
+        //Strategy GMX-GLP vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyGlpGMXGLP.address,
+            constructorArguments: [...strategyConstructorArgumentsGMXGLP],
+        })
+
+        /*
+        //Vault Chef LP WETH-USDC verify
+        await hardhat.run("verify:verify", {
+            address: vaultChefLpWETHUSDC.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Chef LP WETH-USDC vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyCommonChefLPChefLpWETHUSDC.address,
+            constructorArguments: [...strategyConstructorArgumentsChefLpWETHUSDC],
+        })
+
+        /*
+        //Vault Chef LP ZYB-USDC verify
+        await hardhat.run("verify:verify", {
+            address: vaultChefLpZYBUSDC.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Chef LP ZYB-USDC vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyCommonChefLPChefLpZYBUSDC.address,
+            constructorArguments: [...strategyConstructorArgumentsChefLpZYBUSDC],
+        });
+
+        /*
+        //Vault Chef LP ZYB-WETH verify
+        await hardhat.run("verify:verify", {
+            address: vaultChefLpZYBWETH.address,
+            constructorArguments: [],
+        });*/
+        //Strategy Chef LP ZYB-WETH vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyCommonChefLPChefLpZYBWETH.address,
+            constructorArguments: [...strategyConstructorArgumentsChefLpZYBWETH],
+        });
+
+        /*
+        //Vault Sushi MAGIC-ETH verify
+        await hardhat.run("verify:verify", {
+            address: vaultSushiMAGICETH.address,
+            constructorArguments: [],
+        })*/
+        //Strategy Sushi MAGIC-ETH vault verify
+        await hardhat.run("verify:verify", {
+            address: strategyMagicEthSushiSushiMAGICETH.address,
+            constructorArguments: [...strategyConstructorArgumentsSushiMAGICETH],
+        })
+    } catch (error) {
+
+    }
 
 };
 

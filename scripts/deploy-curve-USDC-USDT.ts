@@ -11,7 +11,7 @@ const strategyParams = {
     want: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     pool: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     zap: "0x0000000000000000000000000000000000000000",
-    pid: 1,
+    pid: 7,
     params: ["2", "0", 0, 0], //[poolSize, depositIndex, useUnderlying, useDepositNative]
     unirouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
     crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
@@ -20,8 +20,8 @@ const strategyParams = {
     nativeToDepositRoute: [],
 };
 const vaultParams = {
-    vaultName: "Test CurveUSDC-USDT",
-    vaultSymbol: "Test-CurveUSDC-USDT",
+    vaultName: "YG CurveUSDC-USDT",
+    vaultSymbol: "YG-CurveUSDC-USDT",
     delay: 21600,
 };
 
@@ -30,7 +30,7 @@ async function deploy() {
     // const FeeConfigurator = await ethers.getContractFactory("FeeConfigurator")
     const [account] = await ethers.getSigners();
     const deployerAddress = account.address;
-    const feeConfigurator = "0xE0a0e6B07bC0f28F832A69CaCB75E614318cEba5"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
+    const feeConfigurator = "0x85B1fcA863952068CeEcc40Fcb0A468e13d36c08"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
     const Vault = await ethers.getContractFactory("YieldGeniusVault")
     const vault = await Vault.deploy();
     const StrategyConvexL2 = await ethers.getContractFactory("StrategyConvexL2")
@@ -76,17 +76,17 @@ async function deploy() {
         ? console.log(`Vault Intilization done with tx: ${vaultInitTx.transactionHash}`)
         : console.log(`Vault Intilization failed with tx: ${vaultInitTx.transactionHash}`);
 
-    //Vault verify
-    await hardhat.run("verify:verify", {
-        address: vault.address,
-        constructorArguments: [],
-    })
+    /* //Vault verify
+     await hardhat.run("verify:verify", {
+         address: vault.address,
+         constructorArguments: [],
+     })*/
     //Strategy verify
     await hardhat.run("verify:verify", {
         address: strategyConvexL2.address,
         constructorArguments: [...strategyConstructorArguments],
     })
-    
+
 }
 deploy()
     .then(() => process.exit(0))
