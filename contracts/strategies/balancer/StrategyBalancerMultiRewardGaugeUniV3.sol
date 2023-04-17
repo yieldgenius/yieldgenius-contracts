@@ -21,14 +21,18 @@ interface IBalancerPool {
 contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
     using SafeERC20 for IERC20;
 
-    // Tokens used
+    /**
+     *@notice Tokens used
+     */
     address public want;
     address public output;
     address public native;
 
     YGBalancerStructs.Input public input;
 
-    // Third party contracts
+    /**
+     *@notice Third party contracts
+     */
     address public rewardsGauge;
 
     YGBalancerStructs.BatchSwapStruct[] public nativeToInputRoute;
@@ -60,6 +64,16 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         uint256 strategistFees
     );
 
+    /**
+     * @dev Initializes strategy.
+     * @param _want want address
+     * @param _switches switches
+     * @param _nativeToInputRoute native to output routes
+     * @param _outputToNativeRoute output to native routes
+     * @param _assets assets addresses
+     * @param _rewardsGauge rewards Gauge address
+     * @param _commonAddresses  vault, unirouter, keeper, strategist, beefyFeeRecipient, beefyFeeConfig
+     */
     function initialize(
         address _want,
         bool[] calldata _switches,
@@ -107,7 +121,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         _giveAllowances();
     }
 
-    // puts the funds to work
+    /**
+     *@notice Puts the funds to work
+     */
     function deposit() public whenNotPaused {
         uint256 wantBal = IERC20(want).balanceOf(address(this));
 
@@ -117,6 +133,10 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
+    /**
+     *@notice Withdraw for amount
+     *@param _amount Withdraw amount
+     */
     function withdraw(uint256 _amount) external {
         require(msg.sender == vault, "!vault");
 
@@ -142,6 +162,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         emit Withdraw(balanceOf());
     }
 
+    /**
+     *@notice Harvest on deposit check
+     */
     function beforeDeposit() external override {
         if (harvestOnDeposit) {
             require(msg.sender == vault, "!vault");
@@ -149,19 +172,32 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
+    /**
+     *@notice harvests rewards
+     */
     function harvest() external virtual {
         _harvest(tx.origin);
     }
 
+    /**
+     *@notice harvests rewards
+     *@param callFeeRecipient fee recipient address
+     */
     function harvest(address callFeeRecipient) external virtual {
         _harvest(callFeeRecipient);
     }
 
+    /**
+     *@notice harvests rewards manager only
+     */
     function managerHarvest() external onlyManager {
         _harvest(tx.origin);
     }
 
-    // compounds earnings and charges performance fee
+    /**
+     *@notice compounds earnings and charges performance fee
+     *@param callFeeRecipient Caller address
+     */
     function _harvest(address callFeeRecipient) internal whenNotPaused {
         if (!input.isBeets) {
             IStreamer streamer = IStreamer(
@@ -190,6 +226,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
+    /**
+     *@notice Swap rewards to Native
+     */
     function swapRewardsToNative() internal {
         uint256 outputBal = IERC20(output).balanceOf(address(this));
         if (outputBal > 0) {
@@ -204,7 +243,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
                 int256(outputBal)
             );
         }
-        // extras
+        /**
+         *@notice extras
+         */
         for (uint i; i < rewardTokens.length; i++) {
             uint bal = IERC20(rewardTokens[i]).balanceOf(address(this));
             if (bal >= rewards[rewardTokens[i]].minAmount) {
@@ -247,7 +288,10 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
-    // performance fees
+    /**
+     *@notice Performance fees
+     *@param callFeeRecipient Caller address
+     */
     function chargeFees(address callFeeRecipient) internal {
         IFeeConfig.FeeCategory memory fees = getFees();
         uint256 nativeBal = (IERC20(native).balanceOf(address(this)) *
@@ -265,7 +309,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
     }
 
-    // Adds liquidity to AMM and gets more LP tokens.
+    /**
+     *@notice Adds liquidity to AMM and gets more LP tokens.
+     */
     function addLiquidity() internal {
         uint256 nativeBal = IERC20(native).balanceOf(address(this));
         if (native != input.input) {
@@ -290,32 +336,55 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         );
     }
 
-    // calculate the total underlaying 'want' held by the strat.
+    /**
+     *@notice Calculate the total underlaying 'want' held by the strat.
+     *@return uint256 balance
+     */
     function balanceOf() public view returns (uint256) {
         return balanceOfWant() + balanceOfPool();
     }
 
-    // it calculates how much 'want' this contract holds.
+    /**
+     *@notice It calculates how much 'want' this contract holds.
+     *@return uint256 Balance
+     */
     function balanceOfWant() public view returns (uint256) {
         return IERC20(want).balanceOf(address(this));
     }
 
-    // it calculates how much 'want' the strategy has working in the farm.
+    /**
+     *@notice It calculates how much 'want' the strategy has working in the farm.
+     *@return uint256 Amount
+     */
     function balanceOfPool() public view returns (uint256) {
         return IRewardsGauge(rewardsGauge).balanceOf(address(this));
     }
 
-    // returns rewards unharvested
+    /**
+     *@notice Rreturns rewards unharvested
+     *@return uint256 Claimable rewards amount
+     */
     function rewardsAvailable() public view returns (uint256) {
         return
             IRewardsGauge(rewardsGauge).claimable_reward(address(this), output);
     }
 
-    // native reward amount for calling harvest
+    /**
+     *@notice Native reward amount for calling harvest
+     *@return uint256 Native reward amount
+     */
     function callReward() public pure returns (uint256) {
         return 0; // multiple swap providers with no easy way to estimate native output.
     }
 
+    /**
+     *@notice Add reward token
+     *@param _token reward token
+     *@param _swapInfo Swap info
+     *@param _assets assets addreses
+     *@param _routeToNative Route to native
+     *@param _minAmount minumum amount
+     */
     function addRewardToken(
         address _token,
         YGBalancerStructs.BatchSwapStruct[] memory _swapInfo,
@@ -350,6 +419,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         rewardTokens.push(_token);
     }
 
+    /**
+     *@notice Reset reward token
+     */
     function resetRewardTokens() external onlyManager {
         for (uint i; i < rewardTokens.length; ) {
             delete rewards[rewardTokens[i]];
@@ -360,6 +432,10 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         delete rewardTokens;
     }
 
+    /**
+     *@notice Set harvest on deposit true/false
+     *@param _harvestOnDeposit true/false
+     */
     function setHarvestOnDeposit(bool _harvestOnDeposit) external onlyManager {
         harvestOnDeposit = _harvestOnDeposit;
 
@@ -370,7 +446,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
-    // called as part of strat migration. Sends all the available funds back to the vault.
+    /**
+     *@notice Called as part of strat migration. Sends all the available funds back to the vault.
+     */
     function retireStrat() external {
         require(msg.sender == vault, "!vault");
 
@@ -380,18 +458,26 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         IERC20(want).transfer(vault, wantBal);
     }
 
-    // pauses deposits and withdraws all funds from third party systems.
+    /**
+     *@notice Pauses deposits and withdraws all funds from third party systems.
+     */
     function panic() public onlyManager {
         pause();
         IRewardsGauge(rewardsGauge).withdraw(balanceOfPool());
     }
 
+    /**
+     *@notice pauses the strategy
+     */
     function pause() public onlyManager {
         _pause();
 
         _removeAllowances();
     }
 
+    /**
+     *@notice unpauses the strategy
+     */
     function unpause() external onlyManager {
         _unpause();
 
@@ -400,6 +486,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         deposit();
     }
 
+    /**
+     *@notice Give all allowances
+     */
     function _giveAllowances() internal {
         IERC20(want).safeApprove(rewardsGauge, type(uint).max);
         IERC20(output).safeApprove(unirouter, type(uint).max);
@@ -427,6 +516,9 @@ contract StrategyBalancerMultiRewardGaugeUniV3 is StratFeeManagerInitializable {
         }
     }
 
+    /**
+     *@notice Remove all allowances
+     */
     function _removeAllowances() internal {
         IERC20(want).safeApprove(rewardsGauge, 0);
         IERC20(output).safeApprove(unirouter, 0);
