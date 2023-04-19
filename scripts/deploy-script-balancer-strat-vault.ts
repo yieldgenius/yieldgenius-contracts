@@ -1,5 +1,5 @@
 import vaultV7 from "../artifacts/contracts/vaults/YieldGeniusVault.sol/YieldGeniusVault.json";
-import BalancerMRUNIV3 from "../artifacts/contracts/vaults/StrategyBalancerMultiRewardGaugeUniV3.sol/StrategyBalancerMultiRewardGaugeUniV3.json";
+import BalancerMRUNIV3 from "../artifacts/contracts/strategies/balancer/StrategyBalancerMultiRewardGaugeUniV3.sol/StrategyBalancerMultiRewardGaugeUniV3.json";
 import { ethers } from "hardhat";
 
 const hardhat = require("hardhat");
@@ -94,7 +94,7 @@ async function deploy() {
         //Strategy Balancer wstETH-ETH V2 Vault verify
         await hardhat.run("verify:verify", {
             address: strategyBalancerMultiRewardGaugeUniV3.address,
-            constructorArguments: [...strategyConstructorArgumentsBalancerMultiRewardGaugeUniV3],
+            constructorArguments: [],
         });
 
     } catch (error) {
