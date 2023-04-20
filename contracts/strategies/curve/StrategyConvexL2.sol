@@ -165,8 +165,8 @@ contract StrategyConvexL2 is StratFeeManager {
             ];
             nativeToDepositRoute = _nativeToDepositRoute;
         }
-        if (_crvToNativePath.length > 0) addRewardV3(_crvToNativePath, 1e18);
-        if (_cvxToNativePath.length > 0) addRewardV3(_cvxToNativePath, 1e18);
+        if (_crvToNativePath.length > 0) addRewardV3(_crvToNativePath, 1e9);
+        if (_cvxToNativePath.length > 0) addRewardV3(_cvxToNativePath, 1e9);
 
         withdrawalFee = 0;
         harvestOnDeposit = true;

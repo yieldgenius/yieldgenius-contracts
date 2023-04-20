@@ -137,7 +137,7 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
 
         if (wantBal < _amount) {
             IRewardsGauge(rewardsGauge).withdraw(_amount - wantBal);
-            //IRewardsGauge(rewardsGauge).withdraw(_amount.sub(wantBal));  - Correction below
+
             wantBal = IERC20(want).balanceOf(address(this));
         }
 
@@ -146,12 +146,9 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
         }
 
         if (tx.origin != owner() && !paused()) {
-            /* uint256 withdrawalFeeAmount = wantBal.mul(withdrawalFee).div(
-                WITHDRAWAL_MAX
-            );  - Correction below*/
             uint256 withdrawalFeeAmount = (wantBal * withdrawalFee) /
                 WITHDRAWAL_MAX;
-            //wantBal = wantBal.sub(withdrawalFeeAmount);  - Correction below
+
             wantBal = wantBal - withdrawalFeeAmount;
         }
 
@@ -242,21 +239,15 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
      *@param callFeeRecipient Caller address
      */
     function chargeFees(address callFeeRecipient) internal {
-        /*uint256 nativeBal = IERC20(native).balanceOf(address(this)).mul(45).div(
-            1000
-        );  - Correction below*/
         uint256 nativeBal = (IERC20(native).balanceOf(address(this)) * 45) /
             1000;
 
-        //uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);  - Correction below
         uint256 callFeeAmount = (nativeBal * callFee) / MAX_FEE;
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        //uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);  - Correction below
         uint256 beefyFeeAmount = (nativeBal * beefyFee) / MAX_FEE;
         IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
 
-        //uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);  - Correction below
         uint256 strategistFee = (nativeBal * STRATEGIST_FEE) / MAX_FEE;
         IERC20(native).safeTransfer(strategist, strategistFee);
     }
@@ -397,11 +388,10 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
             }
         }
 
-        //return nativeOut.mul(45).div(1000).mul(callFee).div(MAX_FEE);  - Correction below
         return (((nativeOut * 45) / 1000) * callFee) / MAX_FEE;
     }
 
-       /**
+    /**
      *@notice Add reward token
      *@param _token reward token
      *@param _rewardSwapPoolId Reward swap pool id
@@ -420,8 +410,8 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
         IERC20(_token).safeApprove(unirouter, type(uint).max);
     }
 
-/**
-     *@notice Reset reward token 
+    /**
+     *@notice Reset reward token
      */
     function resetRewardTokens() external onlyManager {
         delete rewards;
@@ -441,7 +431,6 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
         }
     }
 
-    
     /**
      *@notice Called as part of strat migration. Sends all the available funds back to the vault.
      */
@@ -454,7 +443,6 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
         IERC20(want).transfer(vault, wantBal);
     }
 
-    
     /**
      *@notice Pauses deposits and withdraws all funds from third party systems.
      */
@@ -472,7 +460,7 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
         _removeAllowances();
     }
 
-     /**
+    /**
      *@notice unpauses the strategy
      */
     function unpause() external onlyManager {
@@ -487,21 +475,16 @@ contract StrategyBalancerMultiRewardGauge is StratManager, FeeManager {
      *@notice Give all allowances
      */
     function _giveAllowances() internal {
-        //IERC20(want).safeApprove(rewardsGauge, uint256(-1)); - Correction below
         IERC20(want).safeApprove(rewardsGauge, type(uint).max);
-        //IERC20(output).safeApprove(unirouter, uint256(-1));- Correction below
         IERC20(output).safeApprove(unirouter, type(uint).max);
-        //IERC20(native).safeApprove(unirouter, uint256(-1));- Correction below
         IERC20(native).safeApprove(unirouter, type(uint).max);
         if (rewards.length != 0) {
             for (uint i; i < rewards.length; ++i) {
-                //IERC20(rewards[i].token).safeApprove(unirouter, uint256(-1));- Correction below
                 IERC20(rewards[i].token).safeApprove(unirouter, type(uint).max);
             }
         }
 
         IERC20(input).safeApprove(unirouter, 0);
-        //IERC20(input).safeApprove(unirouter, uint256(-1));- Correction below
         IERC20(input).safeApprove(unirouter, type(uint).max);
     }
 

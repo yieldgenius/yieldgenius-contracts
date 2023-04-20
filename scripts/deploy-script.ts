@@ -25,12 +25,12 @@ const strategyParamsCurveUSDCUSDT = {
     want: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     pool: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     zap: "0x0000000000000000000000000000000000000000",
-    pid: 1,
+    pid: 7,
     params: ["2", "0", 0, 0], //[poolSize, depositIndex, useUnderlying, useDepositNative]
     unirouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
-    crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
-    cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 1000, ETH]),
-    nativeToDepositPath: ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 1000, USDC]),
+    crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 500, ETH]),
+    cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 500, ETH]),
+    nativeToDepositPath: ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 500, USDC]),
     nativeToDepositRoute: [],
 };
 const strategyParamsCurvewstETHETH = {
