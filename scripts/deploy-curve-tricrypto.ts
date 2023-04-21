@@ -8,13 +8,14 @@ const hardhat = require("hardhat");
 const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
+const feeRecipient = "0x129C5292fCC814Ca48EE753823aB22131eAf5689"
 const strategyParams = {
     want: "0x8e0b8c8bb9db49a46697f3a5bb8a308e744821d2",
     pool: "0x960ea3e3c7fb317332d990873d354e18d7645590",
     zap: "0x0000000000000000000000000000000000000000",
     pid: 8,
     params: ["3", "2", 0, 0],
-    unirouter: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
+    unirouter: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
     crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
     cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 1000, ETH]),
     nativeToDepositPath: [],
@@ -33,7 +34,7 @@ async function deploy() {
     const deployerAddress = account.address;
     const feeConfigurator = "0x85B1fcA863952068CeEcc40Fcb0A468e13d36c08"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
     const Vault = await ethers.getContractFactory("YieldGeniusVault")
-    const vault = await Vault.deploy();
+    const vault = await Vault.attach("0x9655d4716626a13563e238d354fbA10f294345AE");
     const StrategyConvexL2 = await ethers.getContractFactory("StrategyConvexL2")
 
 
@@ -53,7 +54,7 @@ async function deploy() {
         strategyParams.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
             feeConfigurator],
     ];
 
@@ -62,6 +63,13 @@ async function deploy() {
     await strategyConvexL2.deployed();
 
     console.log("Startegy deployed to:", strategyConvexL2.address);
+
+    //Strategy verify
+    await hardhat.run("verify:verify", {
+        address: strategyConvexL2.address,
+        constructorArguments: [...strategyConstructorArguments],
+    })
+    /*
 
     const vaultConstructorArguments = [
         strategyConvexL2.address,
@@ -82,12 +90,12 @@ async function deploy() {
       await hardhat.run("verify:verify", {
           address: vault.address,
           constructorArguments: [],
-      })*/
+      })
     //Strategy verify
     await hardhat.run("verify:verify", {
         address: strategyConvexL2.address,
         constructorArguments: [...strategyConstructorArguments],
-    })
+    })*/
 
 }
 

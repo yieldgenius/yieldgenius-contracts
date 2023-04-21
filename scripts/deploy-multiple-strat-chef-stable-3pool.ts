@@ -7,20 +7,19 @@ const feeRecipient = "0x129C5292fCC814Ca48EE753823aB22131eAf5689"
 const feeConfig = "0x85B1fcA863952068CeEcc40Fcb0A468e13d36c08"
 
 
-const strategyParamsChefLpARBETH = {
-    want: "0x7dB09b248F026F1a77D58B56Ab92943666672968",
-    poolId: 17,
+const strategyParamsChef3pool = {
+    want: "0x1A90A043751A364447110FF95CCa05AE752d85BE",
+    poolId: 7,
     chef: "0x9BA666165867E916Ee7Ed3a3aE6C19415C2fBDDD",
     unirouter: "0x16e71B13fE6079B4312063F7E81F76d165Ad32Ad",
+    stablerouter: "0x969f7699fbB9C79d8B61315630CDeED95977Cfb8",
     outputToNativeRoute: ["0x3B475F6f2f41853706afc9Fa6a6b8C5dF1a2724c", "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"],
-    outputToLp0Route: ["0x3B475F6f2f41853706afc9Fa6a6b8C5dF1a2724c", "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", "0x912ce59144191c1204e64559fe8253a0e49e6548"],
-    outputToLp1Route: ["0x3B475F6f2f41853706afc9Fa6a6b8C5dF1a2724c", "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"],
-};
-
+    outputToInputRoute: ["0x3B475F6f2f41853706afc9Fa6a6b8C5dF1a2724c", "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8"],
+}
 
 const vaultParamsChefLpARBETH = {
-    vaultName: "YG ARB-ETH",
-    vaultSymbol: "ygARB-ETH",
+    vaultName: "YG ZYB-3pool",
+    vaultSymbol: "ygZYB-3pool",
     delay: 21600,
 };
 
@@ -32,34 +31,34 @@ async function deploy() {
     //Deploy Chef LP ARB-ETH vault
     const VaultChefLpARBETH = await ethers.getContractFactory("YieldGeniusVault")
     const vaultChefLpARBETH = await VaultChefLpARBETH.deploy();
-    const StrategyZyberMultiRewardsLPChefLpARBETH = await ethers.getContractFactory("StrategyZyberMultiRewardsLP")
+    const StrategyZyberStable = await ethers.getContractFactory("StrategyZyberStable")
 
     await vaultChefLpARBETH.deployed();
     console.log("Vault Chef LP ARB-ETH deployed to:", vaultChefLpARBETH.address);
 
-    const strategyConstructorArgumentsChefLpARBETH = [
-        strategyParamsChefLpARBETH.want,
-        strategyParamsChefLpARBETH.poolId,
-        strategyParamsChefLpARBETH.chef,
+    const strategyConstructorArgumentsChef3pool = [
+        strategyParamsChef3pool.want,
+        strategyParamsChef3pool.poolId,
+        strategyParamsChef3pool.chef,
+        strategyParamsChef3pool.stablerouter,
         [vaultChefLpARBETH.address,
-        strategyParamsChefLpARBETH.unirouter,
+        strategyParamsChef3pool.unirouter,
             deployerAddress,
             deployerAddress,
             feeRecipient,
             feeConfig],
-        strategyParamsChefLpARBETH.outputToNativeRoute,
-        strategyParamsChefLpARBETH.outputToLp0Route,
-        strategyParamsChefLpARBETH.outputToLp1Route
+        strategyParamsChef3pool.outputToNativeRoute,
+        strategyParamsChef3pool.outputToInputRoute
     ];
 
-    const strategyCommonChefLPChefLpARBETH = await StrategyZyberMultiRewardsLPChefLpARBETH.deploy(...strategyConstructorArgumentsChefLpARBETH);
+    const strategyZyberStable = await StrategyZyberStable.deploy(...strategyConstructorArgumentsChef3pool);
 
-    await strategyCommonChefLPChefLpARBETH.deployed();
+    await strategyZyberStable.deployed();
 
-    console.log("Startegy StrategyZyberMultiRewardsLP for vault Chef LP ARB-ETH deployed to:", strategyCommonChefLPChefLpARBETH.address);
+    console.log("Startegy StrategyZyberStable for vault Chef 3POOL deployed to:", strategyZyberStable.address);
 
     const vaultConstructorArgumentsChefLpWETHUSDC = [
-        strategyCommonChefLPChefLpARBETH.address,
+        strategyZyberStable.address,
         vaultParamsChefLpARBETH.vaultName,
         vaultParamsChefLpARBETH.vaultSymbol,
         vaultParamsChefLpARBETH.delay,
@@ -77,8 +76,8 @@ async function deploy() {
 
         //Strategy LP ARB-ETH verify
         await hardhat.run("verify:verify", {
-            address: strategyCommonChefLPChefLpARBETH.address,
-            constructorArguments: [...strategyConstructorArgumentsChefLpARBETH],
+            address: strategyZyberStable.address,
+            constructorArguments: [...strategyConstructorArgumentsChef3pool],
         });
 
     } catch (error) {

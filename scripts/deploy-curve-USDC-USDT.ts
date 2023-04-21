@@ -7,6 +7,7 @@ const CURVE = "0x11cDb42B0EB46D95f990BeDD4695A6e3fA034978"
 const CVX = "0xb952A807345991BD529FDded05009F5e80Fe8F45"
 const ETH = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
 const USDC = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
+const feeRecipient = "0x129C5292fCC814Ca48EE753823aB22131eAf5689"
 const strategyParams = {
     want: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
     pool: "0x7f90122bf0700f9e7e1f688fe926940e8839f353",
@@ -14,9 +15,9 @@ const strategyParams = {
     pid: 7,
     params: ["2", "0", 0, 0], //[poolSize, depositIndex, useUnderlying, useDepositNative]
     unirouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
-    crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 1000, ETH]),
-    cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 1000, ETH]),
-    nativeToDepositPath: ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 1000, USDC]),
+    crvToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CURVE, 500, ETH]),
+    cvxToNativePath: ethers.utils.solidityPack(["address", "uint24", "address"], [CVX, 500, ETH]),
+    nativeToDepositPath: ethers.utils.solidityPack(["address", "uint24", "address"], [ETH, 500, USDC]),
     nativeToDepositRoute: [],
 };
 const vaultParams = {
@@ -32,7 +33,7 @@ async function deploy() {
     const deployerAddress = account.address;
     const feeConfigurator = "0x85B1fcA863952068CeEcc40Fcb0A468e13d36c08"// pre deploy and config 1. setFeeCategory (reserach values0) 2. set strategyfeeid 
     const Vault = await ethers.getContractFactory("YieldGeniusVault")
-    const vault = await Vault.deploy();
+    const vault = await Vault.attach("0x0272c90626166EB135a1f220dDdDE9ed804f0c0F");
     const StrategyConvexL2 = await ethers.getContractFactory("StrategyConvexL2")
 
 
@@ -52,7 +53,7 @@ async function deploy() {
         strategyParams.unirouter,
             deployerAddress,
             deployerAddress,
-            deployerAddress,
+            feeRecipient,
             feeConfigurator],
     ];
     console.log("Params configured");
@@ -61,7 +62,11 @@ async function deploy() {
     await strategyConvexL2.deployed();
 
     console.log("Startegy deployed to:", strategyConvexL2.address);
-
+    await hardhat.run("verify:verify", {
+        address: strategyConvexL2.address,
+        constructorArguments: [...strategyConstructorArguments],
+    })
+    return
     const vaultConstructorArguments = [
         strategyConvexL2.address,
         vaultParams.vaultName,
@@ -82,10 +87,7 @@ async function deploy() {
          constructorArguments: [],
      })*/
     //Strategy verify
-    await hardhat.run("verify:verify", {
-        address: strategyConvexL2.address,
-        constructorArguments: [...strategyConstructorArguments],
-    })
+
 
 }
 deploy()
