@@ -7,24 +7,53 @@ interface IUniswapV2Pair {
     event Transfer(address indexed from, address indexed to, uint value);
 
     function name() external pure returns (string memory);
+
     function symbol() external pure returns (string memory);
+
     function decimals() external pure returns (uint8);
+
     function totalSupply() external view returns (uint);
+
     function balanceOf(address owner) external view returns (uint);
-    function allowance(address owner, address spender) external view returns (uint);
+
+    function allowance(
+        address owner,
+        address spender
+    ) external view returns (uint);
 
     function approve(address spender, uint value) external returns (bool);
+
     function transfer(address to, uint value) external returns (bool);
-    function transferFrom(address from, address to, uint value) external returns (bool);
+
+    function transferFrom(
+        address from,
+        address to,
+        uint value
+    ) external returns (bool);
 
     function DOMAIN_SEPARATOR() external view returns (bytes32);
+
     function PERMIT_TYPEHASH() external pure returns (bytes32);
+
     function nonces(address owner) external view returns (uint);
 
-    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
+    function permit(
+        address owner,
+        address spender,
+        uint value,
+        uint deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external;
 
     event Mint(address indexed sender, uint amount0, uint amount1);
-    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
+    event Burn(
+        address indexed sender,
+        uint amount0,
+        uint amount1,
+        address indexed to
+    );
     event Swap(
         address indexed sender,
         uint amount0In,
@@ -36,25 +65,48 @@ interface IUniswapV2Pair {
     event Sync(uint112 reserve0, uint112 reserve1);
 
     function MINIMUM_LIQUIDITY() external pure returns (uint);
+
     function factory() external view returns (address);
+
     function token0() external view returns (address);
+
     function token1() external view returns (address);
-    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+
+    function getReserves()
+        external
+        view
+        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+
     function price0CumulativeLast() external view returns (uint);
+
     function price1CumulativeLast() external view returns (uint);
+
     function kLast() external view returns (uint);
 
     function mint(address to) external returns (uint liquidity);
+
     function burn(address to) external returns (uint amount0, uint amount1);
-    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+
+    function swap(
+        uint amount0Out,
+        uint amount1Out,
+        address to,
+        bytes calldata data
+    ) external;
+
     function skim(address to) external;
+
     function sync() external;
+
     function stable() external view returns (bool);
-    function getAmountOut(uint256 amountIn, address tokenIn) external view returns (uint256);
+
+    function getAmountOut(
+        uint256 amountIn,
+        address tokenIn
+    ) external view returns (uint256);
 
     function initialize(address, address) external;
 }
-
 
 pragma solidity ^0.8.0;
 
@@ -108,7 +160,6 @@ library Babylonian {
     }
 }
 
-
 pragma solidity ^0.8.0;
 
 /**
@@ -132,7 +183,10 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transfer(address recipient, uint256 amount) external returns (bool);
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 
     /**
      * @dev Returns the remaining number of tokens that `spender` will be
@@ -141,7 +195,10 @@ interface IERC20 {
      *
      * This value changes when {approve} or {transferFrom} are called.
      */
-    function allowance(address owner, address spender) external view returns (uint256);
+    function allowance(
+        address owner,
+        address spender
+    ) external view returns (uint256);
 
     /**
      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -168,7 +225,11 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 
     /**
      * @dev Emitted when `value` tokens are moved from one account (`from`) to
@@ -182,9 +243,12 @@ interface IERC20 {
      * @dev Emitted when the allowance of a `spender` for an `owner` is set by
      * a call to {approve}. `value` is the new allowance.
      */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 }
-
 
 pragma solidity ^0.8.0;
 
@@ -243,7 +307,11 @@ library SafeMath {
      *
      * - Subtraction cannot overflow.
      */
-    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function sub(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         require(b <= a, errorMessage);
         uint256 c = a - b;
 
@@ -302,7 +370,11 @@ library SafeMath {
      *
      * - The divisor cannot be zero.
      */
-    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function div(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         require(b > 0, errorMessage);
         uint256 c = a / b;
         // assert(a == b * c + a % b); // There is no case in which this doesn't hold
@@ -338,12 +410,15 @@ library SafeMath {
      *
      * - The divisor cannot be zero.
      */
-    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
+    function mod(
+        uint256 a,
+        uint256 b,
+        string memory errorMessage
+    ) internal pure returns (uint256) {
         require(b != 0, errorMessage);
         return a % b;
     }
 }
-
 
 pragma solidity ^0.8.0;
 
@@ -375,7 +450,9 @@ library Address {
 
         uint256 size;
         // solhint-disable-next-line no-inline-assembly
-        assembly { size := extcodesize(account) }
+        assembly {
+            size := extcodesize(account)
+        }
         return size > 0;
     }
 
@@ -396,11 +473,17 @@ library Address {
      * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
      */
     function sendValue(address payable recipient, uint256 amount) internal {
-        require(address(this).balance >= amount, "Address: insufficient balance");
+        require(
+            address(this).balance >= amount,
+            "Address: insufficient balance"
+        );
 
         // solhint-disable-next-line avoid-low-level-calls, avoid-call-value
-        (bool success, ) = recipient.call{ value: amount }("");
-        require(success, "Address: unable to send value, recipient may have reverted");
+        (bool success, ) = recipient.call{value: amount}("");
+        require(
+            success,
+            "Address: unable to send value, recipient may have reverted"
+        );
     }
 
     /**
@@ -421,8 +504,11 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCall(address target, bytes memory data) internal returns (bytes memory) {
-      return functionCall(target, data, "Address: low-level call failed");
+    function functionCall(
+        address target,
+        bytes memory data
+    ) internal returns (bytes memory) {
+        return functionCall(target, data, "Address: low-level call failed");
     }
 
     /**
@@ -431,7 +517,11 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCall(address target, bytes memory data, string memory errorMessage) internal returns (bytes memory) {
+    function functionCall(
+        address target,
+        bytes memory data,
+        string memory errorMessage
+    ) internal returns (bytes memory) {
         return functionCallWithValue(target, data, 0, errorMessage);
     }
 
@@ -446,8 +536,18 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
-        return functionCallWithValue(target, data, value, "Address: low-level call with value failed");
+    function functionCallWithValue(
+        address target,
+        bytes memory data,
+        uint256 value
+    ) internal returns (bytes memory) {
+        return
+            functionCallWithValue(
+                target,
+                data,
+                value,
+                "Address: low-level call with value failed"
+            );
     }
 
     /**
@@ -456,12 +556,22 @@ library Address {
      *
      * _Available since v3.1._
      */
-    function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage) internal returns (bytes memory) {
-        require(address(this).balance >= value, "Address: insufficient balance for call");
+    function functionCallWithValue(
+        address target,
+        bytes memory data,
+        uint256 value,
+        string memory errorMessage
+    ) internal returns (bytes memory) {
+        require(
+            address(this).balance >= value,
+            "Address: insufficient balance for call"
+        );
         require(isContract(target), "Address: call to non-contract");
 
         // solhint-disable-next-line avoid-low-level-calls
-        (bool success, bytes memory returndata) = target.call{ value: value }(data);
+        (bool success, bytes memory returndata) = target.call{value: value}(
+            data
+        );
         return _verifyCallResult(success, returndata, errorMessage);
     }
 
@@ -471,8 +581,16 @@ library Address {
      *
      * _Available since v3.3._
      */
-    function functionStaticCall(address target, bytes memory data) internal view returns (bytes memory) {
-        return functionStaticCall(target, data, "Address: low-level static call failed");
+    function functionStaticCall(
+        address target,
+        bytes memory data
+    ) internal view returns (bytes memory) {
+        return
+            functionStaticCall(
+                target,
+                data,
+                "Address: low-level static call failed"
+            );
     }
 
     /**
@@ -481,7 +599,11 @@ library Address {
      *
      * _Available since v3.3._
      */
-    function functionStaticCall(address target, bytes memory data, string memory errorMessage) internal view returns (bytes memory) {
+    function functionStaticCall(
+        address target,
+        bytes memory data,
+        string memory errorMessage
+    ) internal view returns (bytes memory) {
         require(isContract(target), "Address: static call to non-contract");
 
         // solhint-disable-next-line avoid-low-level-calls
@@ -489,7 +611,11 @@ library Address {
         return _verifyCallResult(success, returndata, errorMessage);
     }
 
-    function _verifyCallResult(bool success, bytes memory returndata, string memory errorMessage) private pure returns(bytes memory) {
+    function _verifyCallResult(
+        bool success,
+        bytes memory returndata,
+        string memory errorMessage
+    ) private pure returns (bytes memory) {
         if (success) {
             return returndata;
         } else {
@@ -509,9 +635,6 @@ library Address {
     }
 }
 
-
-
-
 pragma solidity ^0.8.0;
 
 /**
@@ -528,11 +651,22 @@ library SafeERC20 {
     using Address for address;
 
     function safeTransfer(IERC20 token, address to, uint256 value) internal {
-        _callOptionalReturn(token, abi.encodeWithSelector(token.transfer.selector, to, value));
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(token.transfer.selector, to, value)
+        );
     }
 
-    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
-        _callOptionalReturn(token, abi.encodeWithSelector(token.transferFrom.selector, from, to, value));
+    function safeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(token.transferFrom.selector, from, to, value)
+        );
     }
 
     /**
@@ -542,25 +676,60 @@ library SafeERC20 {
      * Whenever possible, use {safeIncreaseAllowance} and
      * {safeDecreaseAllowance} instead.
      */
-    function safeApprove(IERC20 token, address spender, uint256 value) internal {
+    function safeApprove(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
         // safeApprove should only be called when setting an initial allowance,
         // or when resetting it to zero. To increase and decrease it, use
         // 'safeIncreaseAllowance' and 'safeDecreaseAllowance'
         // solhint-disable-next-line max-line-length
-        require((value == 0) || (token.allowance(address(this), spender) == 0),
+        require(
+            (value == 0) || (token.allowance(address(this), spender) == 0),
             "SafeERC20: approve from non-zero to non-zero allowance"
         );
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, value));
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(token.approve.selector, spender, value)
+        );
     }
 
-    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
-        uint256 newAllowance = token.allowance(address(this), spender).add(value);
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    function safeIncreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance = token.allowance(address(this), spender).add(
+            value
+        );
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(
+                token.approve.selector,
+                spender,
+                newAllowance
+            )
+        );
     }
 
-    function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) internal {
-        uint256 newAllowance = token.allowance(address(this), spender).sub(value, "SafeERC20: decreased allowance below zero");
-        _callOptionalReturn(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance));
+    function safeDecreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        uint256 newAllowance = token.allowance(address(this), spender).sub(
+            value,
+            "SafeERC20: decreased allowance below zero"
+        );
+        _callOptionalReturn(
+            token,
+            abi.encodeWithSelector(
+                token.approve.selector,
+                spender,
+                newAllowance
+            )
+        );
     }
 
     /**
@@ -574,14 +743,20 @@ library SafeERC20 {
         // we're implementing it ourselves. We use {Address.functionCall} to perform this call, which verifies that
         // the target address contains contract code and also asserts for success in the low-level call.
 
-        bytes memory returndata = address(token).functionCall(data, "SafeERC20: low-level call failed");
-        if (returndata.length > 0) { // Return data is optional
+        bytes memory returndata = address(token).functionCall(
+            data,
+            "SafeERC20: low-level call failed"
+        );
+        if (returndata.length > 0) {
+            // Return data is optional
             // solhint-disable-next-line max-line-length
-            require(abi.decode(returndata, (bool)), "SafeERC20: ERC20 operation did not succeed");
+            require(
+                abi.decode(returndata, (bool)),
+                "SafeERC20: ERC20 operation did not succeed"
+            );
         }
     }
 }
-
 
 pragma solidity ^0.8.0;
 
@@ -629,11 +804,9 @@ library LowGasSafeMath {
     }
 }
 
-
 pragma solidity ^0.8.0;
+
 interface IUniswapRouterSolidly {
-
-
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -648,18 +821,21 @@ interface IUniswapRouterSolidly {
 
     function addLiquidityETH(
         address token,
-        bool stable, 
+        bool stable,
         uint amountTokenDesired,
         uint amountTokenMin,
         uint amountETHMin,
         address to,
         uint deadline
-    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
+    )
+        external
+        payable
+        returns (uint amountToken, uint amountETH, uint liquidity);
 
     function removeLiquidity(
         address tokenA,
         address tokenB,
-        bool stable, 
+        bool stable,
         uint liquidity,
         uint amountAMin,
         uint amountBMin,
@@ -678,17 +854,21 @@ interface IUniswapRouterSolidly {
     ) external returns (uint amountToken, uint amountETH);
 
     function swapExactTokensForTokensSimple(
-        uint amountIn, 
-        uint amountOutMin, 
-        address tokenFrom, 
+        uint amountIn,
+        uint amountOutMin,
+        address tokenFrom,
         address tokenTo,
-        bool stable, 
-        address to, 
+        bool stable,
+        address to,
         uint deadline
     ) external returns (uint[] memory amounts);
 
-    function getAmountOut(uint amountIn, address tokenIn, address tokenOut) external view returns (uint amount, bool stable);
-   
+    function getAmountOut(
+        uint amountIn,
+        address tokenIn,
+        address tokenOut
+    ) external view returns (uint amount, bool stable);
+
     function quoteAddLiquidity(
         address tokenA,
         address tokenB,
@@ -697,12 +877,16 @@ interface IUniswapRouterSolidly {
         uint amountBDesired
     ) external view returns (uint amountA, uint amountB, uint liquidity);
 
-    function quoteLiquidity(uint amountA, uint reserveA, uint reserveB) external view returns (uint amountB);
+    function quoteLiquidity(
+        uint amountA,
+        uint reserveA,
+        uint reserveB
+    ) external view returns (uint amountB);
+
     function factory() external view returns (address);
-    function weth() external view returns (address);
+
+    function wmatic() external view returns (address);
 }
-
-
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -718,18 +902,21 @@ interface IUniswapRouterSolidly {
 
 pragma solidity ^0.8.0;
 
-interface IERC20Extended { 
+interface IERC20Extended {
     function decimals() external view returns (uint256);
 }
 
 interface IWETH is IERC20 {
     function deposit() external payable;
+
     function withdraw(uint256 wad) external;
 }
 
 interface IBeefyVaultV7 is IERC20 {
     function deposit(uint256 amount) external;
+
     function withdraw(uint256 shares) external;
+
     function want() external pure returns (address);
 }
 
@@ -738,11 +925,10 @@ contract YieldGeniusySolidlyZap {
     using SafeERC20 for IERC20;
     using SafeERC20 for IBeefyVaultV7;
 
-    
     IUniswapRouterSolidly public immutable router;
     address public immutable WETH;
     uint256 public constant minimumAmount = 1000;
-    
+
     constructor(address _router, address _WETH) {
         router = IUniswapRouterSolidly(_router);
         WETH = _WETH;
@@ -752,27 +938,58 @@ contract YieldGeniusySolidlyZap {
         assert(msg.sender == WETH);
     }
 
-    function geniusInETH (address yieldgeniusVault, uint256 tokenAmountOutMin) external payable {
-        require(msg.value >= minimumAmount, 'YieldGenius: Insignificant input amount');
+    function geniusInETH(
+        address yieldgeniusVault,
+        uint256 tokenAmountOutMin
+    ) external payable {
+        require(
+            msg.value >= minimumAmount,
+            "YieldGenius: Insignificant input amount"
+        );
 
         IWETH(WETH).deposit{value: msg.value}();
 
         _swapAndStake(yieldgeniusVault, tokenAmountOutMin, WETH);
     }
 
-    function geniusIn (address yieldgeniusVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
-        require(tokenInAmount >= minimumAmount, 'YieldGenius: Insignificant input amount');
-        require(IERC20(tokenIn).allowance(msg.sender, address(this)) >= tokenInAmount, 'YieldGenius: Input token is not approved');
+    function geniusIn(
+        address yieldgeniusVault,
+        uint256 tokenAmountOutMin,
+        address tokenIn,
+        uint256 tokenInAmount
+    ) external {
+        require(
+            tokenInAmount >= minimumAmount,
+            "YieldGenius: Insignificant input amount"
+        );
+        require(
+            IERC20(tokenIn).allowance(msg.sender, address(this)) >=
+                tokenInAmount,
+            "YieldGenius: Input token is not approved"
+        );
 
-        IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), tokenInAmount);
+        IERC20(tokenIn).safeTransferFrom(
+            msg.sender,
+            address(this),
+            tokenInAmount
+        );
 
         _swapAndStake(yieldgeniusVault, tokenAmountOutMin, tokenIn);
     }
 
-    function geniusOut (address yieldgeniusVault, uint256 withdrawAmount) external {
-        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(yieldgeniusVault);
+    function geniusOut(
+        address yieldgeniusVault,
+        uint256 withdrawAmount
+    ) external {
+        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(
+            yieldgeniusVault
+        );
 
-        IERC20(yieldgeniusVault).safeTransferFrom(msg.sender, address(this), withdrawAmount);
+        IERC20(yieldgeniusVault).safeTransferFrom(
+            msg.sender,
+            address(this),
+            withdrawAmount
+        );
         vault.withdraw(withdrawAmount);
 
         if (pair.token0() != WETH && pair.token1() != WETH) {
@@ -788,11 +1005,21 @@ contract YieldGeniusySolidlyZap {
         _returnAssets(tokens);
     }
 
-    function geniusOutAndSwap(address yieldgeniusVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
-        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(yieldgeniusVault);
+    function geniusOutAndSwap(
+        address yieldgeniusVault,
+        uint256 withdrawAmount,
+        address desiredToken,
+        uint256 desiredTokenOutMin
+    ) external {
+        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(
+            yieldgeniusVault
+        );
         address token0 = pair.token0();
         address token1 = pair.token1();
-        require(token0 == desiredToken || token1 == desiredToken, 'YieldGenius: desired token not present in liqudity pair');
+        require(
+            token0 == desiredToken || token1 == desiredToken,
+            "YieldGenius: desired token not present in liqudity pair"
+        );
 
         vault.safeTransferFrom(msg.sender, address(this), withdrawAmount);
         vault.withdraw(withdrawAmount);
@@ -804,7 +1031,15 @@ contract YieldGeniusySolidlyZap {
         path[1] = desiredToken;
 
         _approveTokenIfNeeded(path[0], address(router));
-        router.swapExactTokensForTokensSimple(IERC20(swapToken).balanceOf(address(this)), desiredTokenOutMin, path[0], path[1], pair.stable(), address(this), block.timestamp);
+        router.swapExactTokensForTokensSimple(
+            IERC20(swapToken).balanceOf(address(this)),
+            desiredTokenOutMin,
+            path[0],
+            path[1],
+            pair.stable(),
+            address(this),
+            block.timestamp
+        );
 
         _returnAssets(path);
     }
@@ -813,23 +1048,43 @@ contract YieldGeniusySolidlyZap {
         IERC20(pair).safeTransfer(pair, IERC20(pair).balanceOf(address(this)));
         (uint256 amount0, uint256 amount1) = IUniswapV2Pair(pair).burn(to);
 
-        require(amount0 >= minimumAmount, 'UniswapV2Router: INSUFFICIENT_A_AMOUNT');
-        require(amount1 >= minimumAmount, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
+        require(
+            amount0 >= minimumAmount,
+            "UniswapV2Router: INSUFFICIENT_A_AMOUNT"
+        );
+        require(
+            amount1 >= minimumAmount,
+            "UniswapV2Router: INSUFFICIENT_B_AMOUNT"
+        );
     }
 
-    function _getVaultPair (address yieldgeniusVault) private pure returns (IBeefyVaultV7 vault, IUniswapV2Pair pair) {
+    function _getVaultPair(
+        address yieldgeniusVault
+    ) private pure returns (IBeefyVaultV7 vault, IUniswapV2Pair pair) {
         vault = IBeefyVaultV7(yieldgeniusVault);
         pair = IUniswapV2Pair(vault.want());
     }
 
-    function _swapAndStake(address yieldgeniusVault, uint256 tokenAmountOutMin, address tokenIn) private {
-        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(yieldgeniusVault);
+    function _swapAndStake(
+        address yieldgeniusVault,
+        uint256 tokenAmountOutMin,
+        address tokenIn
+    ) private {
+        (IBeefyVaultV7 vault, IUniswapV2Pair pair) = _getVaultPair(
+            yieldgeniusVault
+        );
 
-        (uint256 reserveA, uint256 reserveB,) = pair.getReserves();
-        require(reserveA > minimumAmount && reserveB > minimumAmount, 'YieldGenius: Liquidity pair reserves too low');
+        (uint256 reserveA, uint256 reserveB, ) = pair.getReserves();
+        require(
+            reserveA > minimumAmount && reserveB > minimumAmount,
+            "YieldGenius: Liquidity pair reserves too low"
+        );
 
         bool isInputA = pair.token0() == tokenIn;
-        require(isInputA || pair.token1() == tokenIn, 'YieldGenius: Input token not present in liqudity pair');
+        require(
+            isInputA || pair.token1() == tokenIn,
+            "YieldGenius: Input token not present in liqudity pair"
+        );
 
         address[] memory path = new address[](2);
         path[0] = tokenIn;
@@ -838,18 +1093,48 @@ contract YieldGeniusySolidlyZap {
         uint256 fullInvestment = IERC20(tokenIn).balanceOf(address(this));
         uint256 swapAmountIn;
         if (isInputA) {
-            swapAmountIn = _getSwapAmount(pair, fullInvestment, reserveA, reserveB, path[0], path[1]);
+            swapAmountIn = _getSwapAmount(
+                pair,
+                fullInvestment,
+                reserveA,
+                reserveB,
+                path[0],
+                path[1]
+            );
         } else {
-            swapAmountIn = _getSwapAmount(pair, fullInvestment, reserveB, reserveA, path[0], path[1]);
+            swapAmountIn = _getSwapAmount(
+                pair,
+                fullInvestment,
+                reserveB,
+                reserveA,
+                path[0],
+                path[1]
+            );
         }
 
         _approveTokenIfNeeded(path[0], address(router));
-        uint256[] memory swapedAmounts = router
-            .swapExactTokensForTokensSimple(swapAmountIn, tokenAmountOutMin, path[0], path[1], pair.stable(), address(this), block.timestamp);
+        uint256[] memory swapedAmounts = router.swapExactTokensForTokensSimple(
+            swapAmountIn,
+            tokenAmountOutMin,
+            path[0],
+            path[1],
+            pair.stable(),
+            address(this),
+            block.timestamp
+        );
 
         _approveTokenIfNeeded(path[1], address(router));
-        (,, uint256 amountLiquidity) = router
-            .addLiquidity(path[0], path[1], pair.stable(), fullInvestment.sub(swapedAmounts[0]), swapedAmounts[1], 1, 1, address(this), block.timestamp);
+        (, , uint256 amountLiquidity) = router.addLiquidity(
+            path[0],
+            path[1],
+            pair.stable(),
+            fullInvestment.sub(swapedAmounts[0]),
+            swapedAmounts[1],
+            1,
+            1,
+            address(this),
+            block.timestamp
+        );
 
         _approveTokenIfNeeded(address(pair), address(vault));
         vault.deposit(amountLiquidity);
@@ -865,8 +1150,10 @@ contract YieldGeniusySolidlyZap {
             if (balance > 0) {
                 if (tokens[i] == WETH) {
                     IWETH(WETH).withdraw(balance);
-                    (bool success,) = msg.sender.call{value: balance}(new bytes(0));
-                    require(success, 'YieldGenius: ETH transfer failed');
+                    (bool success, ) = msg.sender.call{value: balance}(
+                        new bytes(0)
+                    );
+                    require(success, "YieldGenius: ETH transfer failed");
                 } else {
                     IERC20(tokens[i]).safeTransfer(msg.sender, balance);
                 }
@@ -874,50 +1161,109 @@ contract YieldGeniusySolidlyZap {
         }
     }
 
-    function _getSwapAmount(IUniswapV2Pair pair, uint256 investmentA, uint256 reserveA, uint256 reserveB, address tokenA, address tokenB) private view returns (uint256 swapAmount) {
+    function _getSwapAmount(
+        IUniswapV2Pair pair,
+        uint256 investmentA,
+        uint256 reserveA,
+        uint256 reserveB,
+        address tokenA,
+        address tokenB
+    ) private view returns (uint256 swapAmount) {
         uint256 halfInvestment = investmentA / 2;
 
         if (pair.stable()) {
-            swapAmount = _getStableSwap(pair, investmentA, halfInvestment, tokenA, tokenB);
+            swapAmount = _getStableSwap(
+                pair,
+                investmentA,
+                halfInvestment,
+                tokenA,
+                tokenB
+            );
         } else {
             uint256 nominator = pair.getAmountOut(halfInvestment, tokenA);
-            uint256 denominator = halfInvestment * reserveB.sub(nominator) / reserveA.add(halfInvestment);
-            swapAmount = investmentA.sub(Babylonian.sqrt(halfInvestment * halfInvestment * nominator / denominator));
+            uint256 denominator = (halfInvestment * reserveB.sub(nominator)) /
+                reserveA.add(halfInvestment);
+            swapAmount = investmentA.sub(
+                Babylonian.sqrt(
+                    (halfInvestment * halfInvestment * nominator) / denominator
+                )
+            );
         }
     }
 
-    function _getStableSwap(IUniswapV2Pair pair, uint256 investmentA, uint256 halfInvestment, address tokenA, address tokenB) private view returns (uint256 swapAmount) {
+    function _getStableSwap(
+        IUniswapV2Pair pair,
+        uint256 investmentA,
+        uint256 halfInvestment,
+        address tokenA,
+        address tokenB
+    ) private view returns (uint256 swapAmount) {
         uint out = pair.getAmountOut(halfInvestment, tokenA);
-        (uint amountA, uint amountB,) = router.quoteAddLiquidity(tokenA, tokenB, pair.stable(), halfInvestment, out);
-                
-        amountA = amountA * 1e18 / 10**IERC20Extended(tokenA).decimals();
-        amountB = amountB * 1e18 / 10**IERC20Extended(tokenB).decimals();
-        out = out * 1e18 / 10**IERC20Extended(tokenB).decimals();
-        halfInvestment = halfInvestment * 1e18 / 10**IERC20Extended(tokenA).decimals();
-                
-        uint ratio = out * 1e18 / halfInvestment * amountA / amountB; 
-                
-        return investmentA * 1e18 / (ratio + 1e18);
+        (uint amountA, uint amountB, ) = router.quoteAddLiquidity(
+            tokenA,
+            tokenB,
+            pair.stable(),
+            halfInvestment,
+            out
+        );
+
+        amountA = (amountA * 1e18) / 10 ** IERC20Extended(tokenA).decimals();
+        amountB = (amountB * 1e18) / 10 ** IERC20Extended(tokenB).decimals();
+        out = (out * 1e18) / 10 ** IERC20Extended(tokenB).decimals();
+        halfInvestment =
+            (halfInvestment * 1e18) /
+            10 ** IERC20Extended(tokenA).decimals();
+
+        uint ratio = (((out * 1e18) / halfInvestment) * amountA) / amountB;
+
+        return (investmentA * 1e18) / (ratio + 1e18);
     }
 
-    function estimateSwap(address yieldgeniusVault, address tokenIn, uint256 fullInvestmentIn) public view returns(uint256 swapAmountIn, uint256 swapAmountOut, address swapTokenOut) {
+    function estimateSwap(
+        address yieldgeniusVault,
+        address tokenIn,
+        uint256 fullInvestmentIn
+    )
+        public
+        view
+        returns (
+            uint256 swapAmountIn,
+            uint256 swapAmountOut,
+            address swapTokenOut
+        )
+    {
         checkWETH();
         (, IUniswapV2Pair pair) = _getVaultPair(yieldgeniusVault);
 
         bool isInputA = pair.token0() == tokenIn;
-        require(isInputA || pair.token1() == tokenIn, 'YieldGenius: Input token not present in liqudity pair');
+        require(
+            isInputA || pair.token1() == tokenIn,
+            "YieldGenius: Input token not present in liqudity pair"
+        );
 
-        (uint256 reserveA, uint256 reserveB,) = pair.getReserves();
-        (reserveA, reserveB) = isInputA ? (reserveA, reserveB) : (reserveB, reserveA);
+        (uint256 reserveA, uint256 reserveB, ) = pair.getReserves();
+        (reserveA, reserveB) = isInputA
+            ? (reserveA, reserveB)
+            : (reserveB, reserveA);
 
         swapTokenOut = isInputA ? pair.token1() : pair.token0();
-        swapAmountIn = _getSwapAmount(pair, fullInvestmentIn, reserveA, reserveB, tokenIn, swapTokenOut);
-        swapAmountOut = pair.getAmountOut(swapAmountIn, tokenIn); 
+        swapAmountIn = _getSwapAmount(
+            pair,
+            fullInvestmentIn,
+            reserveA,
+            reserveB,
+            tokenIn,
+            swapTokenOut
+        );
+        swapAmountOut = pair.getAmountOut(swapAmountIn, tokenIn);
     }
 
     function checkWETH() public view returns (bool isValid) {
-        isValid = WETH == router.weth();
-        require(isValid, 'YieldGenius: WETH address not matching Router.weth()');
+        isValid = WETH == router.wmatic();
+        require(
+            isValid,
+            "YieldGenius: WETH address not matching Router.weth()"
+        );
     }
 
     function _approveTokenIfNeeded(address token, address spender) private {
@@ -925,5 +1271,4 @@ contract YieldGeniusySolidlyZap {
             IERC20(token).safeApprove(spender, type(uint256).max);
         }
     }
-
 }
